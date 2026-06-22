@@ -1,0 +1,12 @@
+{
+  "name": "regex-wizard",
+  "version": "1.0.0",
+  "description": "Build Regex Without Writing Regex",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

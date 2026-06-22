@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Wizard - Build Regex Without Writing Regex</title>
+  <meta name="description" content="An interactive, premium web application to generate, test, and understand regular expressions visually. No raw regex writing required.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="glow-bg"></div>
+  <div class="container">
+    <header class="app-header">
+      <div class="logo-wrapper">
+        <svg class="magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m15 4-2 2M18 7l-2 2M21 2l-2 2M13 2H9a3 3 0 0 0-3 3v3M6 18H5a3 3 0 0 1-3-3v-4M18 15v3a3 3 0 0 1-3 3h-4M2 22l14-14m0-4 4 4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 13a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z" fill="currentColor" opacity="0.3"/>
+        </svg>
+        <h1>Regex Wizard</h1>
+      </div>
+      <p class="subtitle">Build, test, and understand regular expressions without writing a single line of regex.</p>
+    </header>
+
+    <main class="wizard-grid">
+      <!-- Left Panel: Builder Options -->
+      <section class="panel panel-config">
+        <div class="panel-header">
+          <span class="step-num">1</span>
+          <h2>Configure Validation Rules</h2>
+        </div>
+
+        <div class="form-group">
+          <label for="validation-type">Validation Type</label>
+          <div class="select-wrapper">
+            <select id="validation-type">
+              <option value="password">Password</option>
+              <option value="email">Email Address</option>
+              <option value="phone">Phone Number</option>
+              <option value="date">Date</option>
+              <option value="ip">IP Address</option>
+              <option value="url">URL / Website</option>
+              <option value="custom">Custom Block Builder</option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Dynamic Rule Container -->
+        <div id="rules-container">
+          <!-- Password Rules (Default) -->
+          <div id="rules-password" class="rule-group active">
+            <h3>Password Requirements</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-card">
+                <input type="checkbox" id="pwd-min-len-chk" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Minimum Length</span>
+                <input type="number" id="pwd-min-len-val" value="8" min="1" max="100" class="inline-number">
+              </label>
+
+              <label class="checkbox-card">
+                <input type="checkbox" id="pwd-upper" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require Uppercase Letter</span>
+              </label>
+
+              <label class="checkbox-card">
+                <input type="checkbox" id="pwd-lower">
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require Lowercase Letter</span>
+              </label>
+
+              <label class="checkbox-card">
+                <input type="checkbox" id="pwd-digit" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require Number</span>
+              </label>
+
+              <label class="checkbox-card">
+                <input type="checkbox" id="pwd-special" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require Special Character</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Email Rules -->
+          <div id="rules-email" class="rule-group">
+            <h3>Email Options</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-card">
+                <input type="checkbox" id="email-plus-alias" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Allow plus (+) sign address alias</span>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" id="email-restrict-domain">
+                <span class="custom-chk"></span>
+                <span class="chk-label">Restrict to specific domain</span>
+              </label>
+              <div id="email-domain-wrapper" class="sub-option-box hidden">
+                <input type="text" id="email-domain-val" placeholder="e.g., company.com" class="text-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone Rules -->
+          <div id="rules-phone" class="rule-group">
+            <h3>Phone Number Options</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-card">
+                <input type="checkbox" id="phone-cc">
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require Country Code (+X)</span>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" id="phone-seps" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Allow spaces, dashes, or dots</span>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" id="phone-len-chk" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Exact standard length (10 digits)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Date Rules -->
+          <div id="rules-date" class="rule-group">
+            <h3>Date Settings</h3>
+            <div class="form-group">
+              <label for="date-format">Date Format</label>
+              <div class="select-wrapper">
+                <select id="date-format">
+                  <option value="yyyy-mm-dd">YYYY-MM-DD (e.g., 2026-06-22)</option>
+                  <option value="mm/dd/yyyy">MM/DD/YYYY (e.g., 06/22/2026)</option>
+                  <option value="dd/mm/yyyy">DD/MM/YYYY (e.g., 22/06/2026)</option>
+                </select>
+                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="date-sep">Separator Choice</label>
+              <div class="select-wrapper">
+                <select id="date-sep">
+                  <option value="dash">Dashes only (-)</option>
+                  <option value="slash">Slashes only (/)</option>
+                  <option value="both">Dashes or Slashes (- or /)</option>
+                </select>
+                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- IP Rules -->
+          <div id="rules-ip" class="rule-group">
+            <h3>IP Address Settings</h3>
+            <div class="radio-group-cards">
+              <label class="radio-card">
+                <input type="radio" name="ip-ver" id="ip-v4" checked>
+                <span class="radio-indicator"></span>
+                <span class="radio-text">IPv4 (e.g., 192.168.1.1)</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="ip-ver" id="ip-v6">
+                <span class="radio-indicator"></span>
+                <span class="radio-text">IPv6 (e.g., fe80::1)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- URL Rules -->
+          <div id="rules-url" class="rule-group">
+            <h3>URL Settings</h3>
+            <div class="checkbox-list">
+              <label class="checkbox-card">
+                <input type="checkbox" id="url-protocol-req" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Require protocol (http:// or https://)</span>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" id="url-www">
+                <span class="custom-chk"></span>
+                <span class="chk-label">Allow optional "www." prefix</span>
+              </label>
+              <label class="checkbox-card">
+                <input type="checkbox" id="url-params" checked>
+                <span class="custom-chk"></span>
+                <span class="chk-label">Allow query parameters & fragments</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Custom Block Builder -->
+          <div id="rules-custom" class="rule-group">
+            <div class="block-builder-header">
+              <h3>Match Blocks</h3>
+              <p class="builder-description">Build a regex matching chain by adding blocks sequentially.</p>
+            </div>
+            
+            <div class="block-choices">
+              <button type="button" class="btn-block" data-type="start">Starts With</button>
+              <button type="button" class="btn-block" data-type="text">Exact Text</button>
+              <button type="button" class="btn-block" data-type="digits">Digits</button>
+              <button type="button" class="btn-block" data-type="letters">Letters</button>
+              <button type="button" class="btn-block" data-type="whitespace">Whitespace</button>
+              <button type="button" class="btn-block" data-type="any">Any Character</button>
+              <button type="button" class="btn-block" data-type="end">Ends With</button>
+            </div>
+
+            <div class="block-chain-container">
+              <div id="block-chain" class="block-chain">
+                <!-- Blocks will be added here dynamically -->
+                <div class="empty-chain-msg">No blocks added. Click a button above to add matching rules.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: Generated Output & Testing -->
+      <div class="panel-stack">
+        <!-- Result Panel -->
+        <section class="panel panel-result">
+          <div class="panel-header">
+            <span class="step-num">2</span>
+            <h2>Generated Regex</h2>
+          </div>
+
+          <div class="regex-output-box">
+            <code id="regex-display">^$</code>
+            <button id="btn-copy" class="btn-icon" aria-label="Copy Regex">
+              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+              <span class="copy-tooltip">Copy</span>
+            </button>
+          </div>
+
+          <div class="explanation-section">
+            <h3>Regex Explanation</h3>
+            <div id="explanation-list" class="explanation-list">
+              <!-- Explanation items will be rendered dynamically -->
+              <div class="explanation-item">
+                <span class="regex-token">^</span>
+                <span class="token-desc">Start of the string</span>
+              </div>
+              <div class="explanation-item">
+                <span class="regex-token">$</span>
+                <span class="token-desc">End of the string</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Testing Panel -->
+        <section class="panel panel-tester">
+          <div class="panel-header">
+            <span class="step-num">3</span>
+            <h2>Test Your Input</h2>
+          </div>
+
+          <div class="tester-input-wrapper">
+            <input type="text" id="test-input" placeholder="Enter test string here..." class="text-input">
+            <div id="test-badge" class="test-badge neutral">
+              <span class="badge-icon"></span>
+              <span class="badge-text">Empty Input</span>
+            </div>
+          </div>
+
+          <div id="test-feedback" class="test-feedback">
+            <!-- Messages like "Missing uppercase character" or matches will show here -->
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="app-footer">
+      <p>&copy; 2026 Regex Wizard. Handcrafted with precision.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
